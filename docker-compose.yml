@@ -3,7 +3,7 @@ services:
     container_name: "jiracloneDB"
     image: postgres:17
     volumes:
-      - "./database/postgres-data:/var/lib/postgresql/data:rw"
+      - "./database/postgres-data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     environment:
