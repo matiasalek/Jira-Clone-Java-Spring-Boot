@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Transactional
@@ -56,9 +57,11 @@ public class UserService {
         user.setPasswordHash(hashedPassword);
 
         user.setRole(request.getRole());
+        user.setCreatedAt(LocalDateTime.now());
+        user.setUpdatedAt(LocalDateTime.now());
+
 
         User savedUser = userRepository.save(user);
-
         return new CreateUserResponse(savedUser);
     }
 
