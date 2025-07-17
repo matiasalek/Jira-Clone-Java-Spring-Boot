@@ -79,6 +79,11 @@ public class UserService {
        return new UpdateUserResponse(updatedUser);
     }
 
+    // TODO Methods
+    // Assign Tickets
+    // Delete Users (Unassign tickets before deleting)(Who are those tickets going to be assigned to?)
+    // Option: Assign all tickets to the reporter
+
     public boolean validatePassword(String username, String plainTextPassword) {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
