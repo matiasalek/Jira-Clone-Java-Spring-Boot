@@ -18,7 +18,7 @@ public class CreateUserRequest {
     private String username;
 
     @NotBlank(message = "Email is required")
-    @Email(regexp = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$", message = "Invalid email address")
+    @Email(message = "Invalid email address")
     private String email;
 
     @NotBlank(message = "Password is required")

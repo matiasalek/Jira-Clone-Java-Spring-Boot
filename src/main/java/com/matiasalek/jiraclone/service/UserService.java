@@ -1,7 +1,9 @@
 package com.matiasalek.jiraclone.service;
 
 import com.matiasalek.jiraclone.dto.request.CreateUserRequest;
+import com.matiasalek.jiraclone.dto.request.UpdateUserRequest;
 import com.matiasalek.jiraclone.dto.response.CreateUserResponse;
+import com.matiasalek.jiraclone.dto.response.UpdateUserResponse;
 import com.matiasalek.jiraclone.entity.User;
 import com.matiasalek.jiraclone.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
@@ -63,6 +65,18 @@ public class UserService {
 
         User savedUser = userRepository.save(user);
         return new CreateUserResponse(savedUser);
+    }
+
+    public UpdateUserResponse updateUser(Long id,@Valid UpdateUserRequest request) {
+       User existingUser = userRepository.findById(id)
+               .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+
+       request.getUsername().ifPresent(existingUser::setUsername);
+       request.getEmail().ifPresent(existingUser::setEmail);
+       request.getRole().ifPresent(existingUser::setRole);
+
+       User updatedUser = userRepository.save(existingUser);
+       return new UpdateUserResponse(updatedUser);
     }
 
     public boolean validatePassword(String username, String plainTextPassword) {
