@@ -4,9 +4,13 @@ import com.matiasalek.jiraclone.dto.request.AssignTicketRequest;
 import com.matiasalek.jiraclone.dto.request.ChangePasswordRequest;
 import com.matiasalek.jiraclone.dto.request.CreateUserRequest;
 import com.matiasalek.jiraclone.dto.request.UpdateUserRequest;
+import com.matiasalek.jiraclone.dto.response.AssignTicketResponse;
 import com.matiasalek.jiraclone.dto.response.CreateUserResponse;
 import com.matiasalek.jiraclone.dto.response.UpdateUserResponse;
+import com.matiasalek.jiraclone.entity.Ticket;
 import com.matiasalek.jiraclone.entity.User;
+import com.matiasalek.jiraclone.enums.Role;
+import com.matiasalek.jiraclone.repository.TicketRepository;
 import com.matiasalek.jiraclone.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
@@ -16,6 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.context.request.AsyncWebRequestInterceptor;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -25,13 +30,16 @@ import java.util.List;
 @Validated
 public class UserService {
     private final UserRepository userRepository;
-
+    private final TicketRepository ticketRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AsyncWebRequestInterceptor asyncWebRequestInterceptor;
 
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, TicketRepository ticketRepository, AsyncWebRequestInterceptor asyncWebRequestInterceptor) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.ticketRepository = ticketRepository;
+        this.asyncWebRequestInterceptor = asyncWebRequestInterceptor;
     }
 
     @Transactional(readOnly = true)
@@ -107,15 +115,24 @@ public class UserService {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
-    public void assignTicket(Long id, @Valid AssignTicketRequest request) {
-        User  user = userRepository.findById(id)
-               .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+    public AssignTicketResponse assignTicket(Long TicketId, @Valid AssignTicketRequest request) {
+        Ticket ticket = ticketRepository.findById(TicketId)
+               .orElseThrow(() -> new EntityNotFoundException(TicketId.toString()));
 
+        User assignee = userRepository.findById(request.getAssigneeId())
+                .orElseThrow(() -> new EntityNotFoundException(request.getAssigneeId().toString()));
 
+        if (assignee.getRole() != Role.ADMIN && assignee.getRole() != Role.DEVELOPER) {
+            throw new IllegalArgumentException("Assignee role must be either ADMIN or DEVELOPER");
+        }
+
+        ticket.setAssignee(assignee);
+
+        Ticket updatedTicket = ticketRepository.save(ticket);
+        return new AssignTicketResponse(updatedTicket);
     }
 
     // TODO Methods
-    // Assign Tickets
     // Delete Users (Unassign tickets before deleting)(Who are those tickets going to be assigned to?)
     // Option: Assign all tickets to the reporter
 
