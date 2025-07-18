@@ -1,5 +1,6 @@
 package com.matiasalek.jiraclone.service;
 
+import com.matiasalek.jiraclone.dto.request.ChangePasswordRequest;
 import com.matiasalek.jiraclone.dto.request.CreateUserRequest;
 import com.matiasalek.jiraclone.dto.request.UpdateUserRequest;
 import com.matiasalek.jiraclone.dto.response.CreateUserResponse;
@@ -79,6 +80,27 @@ public class UserService {
 
        User updatedUser = userRepository.save(existingUser);
        return new UpdateUserResponse(updatedUser);
+    }
+
+    @Transactional
+    public void changePassword(Long id, @Valid ChangePasswordRequest request) {
+        User user =  userRepository.findById(id)
+               .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPasswordHash())) {
+            throw new IllegalArgumentException("Current password is incorrect");
+        }
+
+        if (!request.getNewPassword().equals(request.getNewPasswordConfirmation())) {
+            throw new IllegalArgumentException("New passwords do not match");
+        }
+
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPasswordHash())) {
+            throw new IllegalArgumentException("New password must be different from current password");
+        }
+
+        user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
+        userRepository.save(user);
     }
 
     // TODO Methods
