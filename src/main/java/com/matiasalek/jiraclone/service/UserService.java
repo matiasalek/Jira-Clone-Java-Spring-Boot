@@ -42,6 +42,7 @@ public class UserService {
                 .orElseThrow(() -> new EntityNotFoundException(id.toString()));
     }
 
+    @Transactional
     public CreateUserResponse createUser(@Valid CreateUserRequest request) {
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new IllegalArgumentException("Username already exists");
@@ -67,6 +68,7 @@ public class UserService {
         return new CreateUserResponse(savedUser);
     }
 
+    @Transactional
     public UpdateUserResponse updateUser(Long id,@Valid UpdateUserRequest request) {
        User existingUser = userRepository.findById(id)
                .orElseThrow(() -> new EntityNotFoundException(id.toString()));
