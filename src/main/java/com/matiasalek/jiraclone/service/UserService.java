@@ -1,5 +1,6 @@
 package com.matiasalek.jiraclone.service;
 
+import com.matiasalek.jiraclone.dto.request.AssignTicketRequest;
 import com.matiasalek.jiraclone.dto.request.ChangePasswordRequest;
 import com.matiasalek.jiraclone.dto.request.CreateUserRequest;
 import com.matiasalek.jiraclone.dto.request.UpdateUserRequest;
@@ -9,6 +10,7 @@ import com.matiasalek.jiraclone.entity.User;
 import com.matiasalek.jiraclone.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -101,6 +103,15 @@ public class UserService {
 
         user.setPasswordHash(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void assignTicket(Long id, @Valid AssignTicketRequest request) {
+        User  user = userRepository.findById(id)
+               .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+
+
     }
 
     // TODO Methods
