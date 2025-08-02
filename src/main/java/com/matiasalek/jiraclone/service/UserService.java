@@ -135,6 +135,14 @@ public class UserService {
     @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void deleteUserById(Long id) {
+        User existingUserById = userRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+
+        for (Ticket t : existingUserById.getAssigneedTickets()) {
+            t.setAssignee(null);
+        }
+
+        ticketRepository.saveAll(existingUserById.getAssigneedTickets());
         userRepository.deleteById(id);
     }
 
