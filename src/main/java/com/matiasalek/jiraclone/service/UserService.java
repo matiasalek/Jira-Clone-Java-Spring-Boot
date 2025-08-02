@@ -132,9 +132,11 @@ public class UserService {
         return new AssignTicketResponse(updatedTicket);
     }
 
-    // TODO Methods
-    // Delete Users (Unassign tickets before deleting)(Who are those tickets going to be assigned to?)
-    // Option: Assign all tickets to the reporter
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void deleteUserById(Long id) {
+        userRepository.deleteById(id);
+    }
 
     public boolean validatePassword(String username, String plainTextPassword) {
         User user = userRepository.findByUsername(username)
