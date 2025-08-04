@@ -1,7 +1,10 @@
 package com.matiasalek.jiraclone.controller;
 
+import com.matiasalek.jiraclone.dto.request.ChangePasswordRequest;
 import com.matiasalek.jiraclone.dto.request.CreateUserRequest;
+import com.matiasalek.jiraclone.dto.request.UpdateUserRequest;
 import com.matiasalek.jiraclone.dto.response.CreateUserResponse;
+import com.matiasalek.jiraclone.dto.response.UpdateUserResponse;
 import com.matiasalek.jiraclone.entity.User;
 import com.matiasalek.jiraclone.service.UserService;
 import org.springframework.http.HttpStatus;
@@ -34,6 +37,18 @@ public class UserController {
     public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserRequest user) {
         CreateUserResponse createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateUserResponse> updateUser(@PathVariable Long id, @RequestBody UpdateUserRequest user) {
+        UpdateUserResponse updatedUser = userService.updateUser(id, user);
+        return ResponseEntity.ok(updatedUser);
+    }
+
+    @PostMapping("/{id}/change-password")
+    public ResponseEntity<Void> changePassword(@PathVariable Long id, @RequestBody ChangePasswordRequest user) {
+        userService.changePassword(id, user);
+        return ResponseEntity.noContent().build();
     }
 
     @DeleteMapping("/{id}")
