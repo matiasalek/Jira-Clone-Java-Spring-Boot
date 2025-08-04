@@ -1,8 +1,10 @@
 package com.matiasalek.jiraclone.controller;
 
+import com.matiasalek.jiraclone.dto.request.AssignTicketRequest;
 import com.matiasalek.jiraclone.dto.request.ChangePasswordRequest;
 import com.matiasalek.jiraclone.dto.request.CreateUserRequest;
 import com.matiasalek.jiraclone.dto.request.UpdateUserRequest;
+import com.matiasalek.jiraclone.dto.response.AssignTicketResponse;
 import com.matiasalek.jiraclone.dto.response.CreateUserResponse;
 import com.matiasalek.jiraclone.dto.response.UpdateUserResponse;
 import com.matiasalek.jiraclone.entity.User;
@@ -55,5 +57,11 @@ public class UserController {
     public ResponseEntity<Void> deleteUserById(@PathVariable Long id) {
         userService.deleteUserById(id);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{id}/assign-ticket")
+    public ResponseEntity<AssignTicketResponse> assignTicket(@PathVariable Long id, @RequestBody AssignTicketRequest ticketUser) {
+        AssignTicketResponse assignTicket = userService.assignTicket(id, ticketUser);
+        return ResponseEntity.status(HttpStatus.CREATED).body(assignTicket);
     }
 }
