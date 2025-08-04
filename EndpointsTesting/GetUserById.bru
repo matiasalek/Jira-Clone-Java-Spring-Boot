@@ -1,0 +1,15 @@
+meta {
+  name: GetUserById
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://localhost:8080/api/user/8
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}
