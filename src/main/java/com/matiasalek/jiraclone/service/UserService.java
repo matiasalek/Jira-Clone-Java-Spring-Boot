@@ -15,7 +15,6 @@ import com.matiasalek.jiraclone.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -142,12 +141,5 @@ public class UserService {
 
         ticketRepository.saveAll(existingUserById.getAssigneedTickets());
         userRepository.deleteById(id);
-    }
-
-    public boolean validatePassword(String username, String plainTextPassword) {
-        User user = userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        return passwordEncoder.matches(plainTextPassword, user.getPasswordHash());
     }
 }
