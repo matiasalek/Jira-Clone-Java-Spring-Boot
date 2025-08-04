@@ -32,14 +32,12 @@ public class UserService {
     private final UserRepository userRepository;
     private final TicketRepository ticketRepository;
     private final PasswordEncoder passwordEncoder;
-    private final AsyncWebRequestInterceptor asyncWebRequestInterceptor;
 
 
     public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, TicketRepository ticketRepository, AsyncWebRequestInterceptor asyncWebRequestInterceptor) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
         this.ticketRepository = ticketRepository;
-        this.asyncWebRequestInterceptor = asyncWebRequestInterceptor;
     }
 
     @Transactional(readOnly = true)
