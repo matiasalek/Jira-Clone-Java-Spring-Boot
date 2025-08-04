@@ -1,0 +1,24 @@
+meta {
+  name: CreateUser
+  type: http
+  seq: 2
+}
+
+post {
+  url: http://localhost:8080/api/user
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+      "username": "matias123",
+      "email": "matias@example.com",
+      "password": "securepass",
+      "role": "DEVELOPER"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
