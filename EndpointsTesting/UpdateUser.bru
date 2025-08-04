@@ -1,0 +1,23 @@
+meta {
+  name: UpdateUser
+  type: http
+  seq: 5
+}
+
+put {
+  url: http://localhost:8080/api/user/8
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "username":"matias1234",
+    "email":"matiasmatias@gmail.com",
+    "role":"ADMIN"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
