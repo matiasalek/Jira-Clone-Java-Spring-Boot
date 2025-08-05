@@ -47,7 +47,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public User getUserById(Long id) {
         return userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(id.toString()));
+                .orElseThrow(() -> new EntityNotFoundException("User not found"+ id));
     }
 
     @Transactional
