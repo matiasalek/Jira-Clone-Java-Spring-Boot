@@ -2,6 +2,7 @@ package com.matiasalek.jiraclone.service;
 
 import com.matiasalek.jiraclone.dto.request.CreateTicketRequest;
 import com.matiasalek.jiraclone.dto.request.UpdateTicketRequest;
+import com.matiasalek.jiraclone.dto.request.UpdateUserRequest;
 import com.matiasalek.jiraclone.dto.response.CreateTicketResponse;
 import com.matiasalek.jiraclone.dto.response.UpdateTicketResponse;
 import com.matiasalek.jiraclone.entity.Ticket;

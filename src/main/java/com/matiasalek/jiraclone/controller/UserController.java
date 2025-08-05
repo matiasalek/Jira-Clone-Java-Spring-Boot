@@ -9,6 +9,7 @@ import com.matiasalek.jiraclone.dto.response.CreateUserResponse;
 import com.matiasalek.jiraclone.dto.response.UpdateUserResponse;
 import com.matiasalek.jiraclone.entity.User;
 import com.matiasalek.jiraclone.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -36,7 +37,7 @@ public class UserController {
     }
 
     @PostMapping
-    public ResponseEntity<CreateUserResponse> createUser(@RequestBody CreateUserRequest user) {
+    public ResponseEntity<CreateUserResponse> createUser(@Valid @RequestBody CreateUserRequest user) {
         CreateUserResponse createdUser = userService.createUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
     }

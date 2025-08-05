@@ -1,0 +1,46 @@
+package com.matiasalek.jiraclone.controller;
+
+import com.matiasalek.jiraclone.dto.request.CreateTicketRequest;
+import com.matiasalek.jiraclone.dto.request.UpdateTicketRequest;
+import com.matiasalek.jiraclone.dto.response.CreateTicketResponse;
+import com.matiasalek.jiraclone.dto.response.UpdateTicketResponse;
+import com.matiasalek.jiraclone.entity.Ticket;
+import com.matiasalek.jiraclone.service.TicketService;
+import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/ticket")
+public class TicketController {
+    private final TicketService ticketService;
+
+    public TicketController(TicketService ticketService) {
+        this.ticketService = ticketService;
+    }
+
+    @GetMapping
+    public List<Ticket> getAllTickets() {
+        return ticketService.getAllTickets();
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Ticket> getTicketById(@PathVariable Long id) {
+        Ticket ticket = ticketService.getTicketById(id);
+        return ResponseEntity.ok(ticket);
+    }
+
+    @PostMapping
+    public ResponseEntity<CreateTicketResponse> createTicket(@Valid @RequestBody CreateTicketRequest createTicketRequest) {
+        CreateTicketResponse createTicketResponse = ticketService.createTicket(createTicketRequest);
+        return ResponseEntity.ok(createTicketResponse);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UpdateTicketResponse> updateTicket(@PathVariable Long id, @RequestBody UpdateTicketRequest updateTicketRequest) {
+        UpdateTicketResponse updatedTicket = ticketService.updateTicket(id, updateTicketRequest);
+        return ResponseEntity.ok(updatedTicket);
+    }
+}
