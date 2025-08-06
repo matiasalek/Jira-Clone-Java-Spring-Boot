@@ -17,8 +17,8 @@ public class UpdateTicketResponse {
     private String description;
     private Status status;
     private Priority priority;
-    private User reporter;
-    private User assignee;
+    private UserSummary reporter;
+    private UserSummary assignee;
     private LocalDateTime updatedAt;
 
     public UpdateTicketResponse(Ticket ticket) {
@@ -27,8 +27,20 @@ public class UpdateTicketResponse {
         this.description = ticket.getDescription();
         this.status = ticket.getStatus();
         this.priority = ticket.getPriority();
-        this.reporter = ticket.getReporter();
-        this.assignee = ticket.getAssignee();
         this.updatedAt = ticket.getUpdatedAt();
+
+        this.reporter = new UserSummary(
+                ticket.getReporter().getId(),
+                ticket.getReporter().getUsername(),
+                ticket.getReporter().getEmail(),
+                ticket.getReporter().getRole()
+        );
+
+        this.assignee = new UserSummary(
+                ticket.getAssignee().getId(),
+                ticket.getAssignee().getUsername(),
+                ticket.getAssignee().getEmail(),
+                ticket.getAssignee().getRole()
+        );
     }
 }

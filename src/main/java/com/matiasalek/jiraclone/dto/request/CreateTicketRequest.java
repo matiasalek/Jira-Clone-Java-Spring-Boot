@@ -1,6 +1,5 @@
 package com.matiasalek.jiraclone.dto.request;
 
-import com.matiasalek.jiraclone.entity.User;
 import com.matiasalek.jiraclone.enums.Priority;
 import com.matiasalek.jiraclone.enums.Status;
 import jakarta.validation.constraints.NotBlank;
@@ -26,8 +25,8 @@ public class CreateTicketRequest {
     private Priority priority;
 
     @NotNull(message = "User to report the ticket is required")
-    private User reporter;
+    private Long reporterId;
 
     @NotNull(message = "User to assign the ticket is required")
-    private User assignee;
+    private Long assigneeId;
 }

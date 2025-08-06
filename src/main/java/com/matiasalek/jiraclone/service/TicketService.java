@@ -2,10 +2,10 @@ package com.matiasalek.jiraclone.service;
 
 import com.matiasalek.jiraclone.dto.request.CreateTicketRequest;
 import com.matiasalek.jiraclone.dto.request.UpdateTicketRequest;
-import com.matiasalek.jiraclone.dto.request.UpdateUserRequest;
 import com.matiasalek.jiraclone.dto.response.CreateTicketResponse;
 import com.matiasalek.jiraclone.dto.response.UpdateTicketResponse;
 import com.matiasalek.jiraclone.entity.Ticket;
+import com.matiasalek.jiraclone.entity.User;
 import com.matiasalek.jiraclone.enums.Role;
 import com.matiasalek.jiraclone.exception.UnauthorizedException;
 import com.matiasalek.jiraclone.repository.TicketRepository;
@@ -44,19 +44,25 @@ public class TicketService {
 
     @Transactional
     public CreateTicketResponse createTicket(@Valid CreateTicketRequest request) {
-        Role role = userRepository.findRoleByUserId(request.getReporter().getId());
+        Role role = userRepository.findRoleByUserId(request.getReporterId());
 
         if (role != Role.ADMIN) {
             throw new UnauthorizedException("Only ADMINs can create tickets.");
         }
+
+        User reporter = userRepository.findById(request.getReporterId())
+                .orElseThrow(()-> new EntityNotFoundException("Reporter not found"+ request.getReporterId()));
+
+        User assignee = userRepository.findById(request.getAssigneeId())
+                .orElseThrow(()-> new EntityNotFoundException("Assignee not found"+ request.getAssigneeId()));
 
         Ticket ticket = new Ticket();
         ticket.setTitle(request.getTitle());
         ticket.setDescription(request.getDescription());
         ticket.setStatus(request.getStatus());
         ticket.setPriority(request.getPriority());
-        ticket.setReporter(request.getReporter());
-        ticket.setAssignee(request.getAssignee());
+        ticket.setReporter(reporter);
+        ticket.setAssignee(assignee);
         ticket.setCreatedAt(LocalDateTime.now());
         ticket.setUpdatedAt(LocalDateTime.now());
 

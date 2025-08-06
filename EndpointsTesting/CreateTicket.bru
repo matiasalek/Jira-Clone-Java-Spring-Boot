@@ -1,0 +1,26 @@
+meta {
+  name: CreateTicket
+  type: http
+  seq: 8
+}
+
+post {
+  url: http://localhost:8080/api/ticket
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "title":"bug fix 2",
+    "description":"fix a bug in test",
+    "status":"TODO",
+    "priority":"MEDIUM",
+    "reporterId": 8,
+    "assigneeId": 8
+  }
+}
+
+settings {
+  encodeUrl: true
+}

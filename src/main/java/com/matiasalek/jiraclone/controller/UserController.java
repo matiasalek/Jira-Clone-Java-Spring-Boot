@@ -7,6 +7,7 @@ import com.matiasalek.jiraclone.dto.request.UpdateUserRequest;
 import com.matiasalek.jiraclone.dto.response.AssignTicketResponse;
 import com.matiasalek.jiraclone.dto.response.CreateUserResponse;
 import com.matiasalek.jiraclone.dto.response.UpdateUserResponse;
+import com.matiasalek.jiraclone.dto.response.UserSummary;
 import com.matiasalek.jiraclone.entity.User;
 import com.matiasalek.jiraclone.service.UserService;
 import jakarta.validation.Valid;
@@ -26,7 +27,7 @@ public class UserController {
     }
 
     @GetMapping
-    public List<User> getUsers() {
+    public List<UserSummary> getUsers() {
         return userService.getAllUsers();
     }
 

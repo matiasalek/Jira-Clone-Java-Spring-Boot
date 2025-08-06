@@ -7,6 +7,7 @@ import com.matiasalek.jiraclone.dto.request.UpdateUserRequest;
 import com.matiasalek.jiraclone.dto.response.AssignTicketResponse;
 import com.matiasalek.jiraclone.dto.response.CreateUserResponse;
 import com.matiasalek.jiraclone.dto.response.UpdateUserResponse;
+import com.matiasalek.jiraclone.dto.response.UserSummary;
 import com.matiasalek.jiraclone.entity.Ticket;
 import com.matiasalek.jiraclone.entity.User;
 import com.matiasalek.jiraclone.enums.Role;
@@ -23,6 +24,7 @@ import org.springframework.web.context.request.AsyncWebRequestInterceptor;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -40,8 +42,11 @@ public class UserService {
     }
 
     @Transactional(readOnly = true)
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserSummary> getAllUsers() {
+        return userRepository.findAll().stream()
+                .map(user -> new UserSummary(user.getId(), user.getUsername(), user.getEmail(), user.getRole()))
+                .collect(Collectors.toList());
+
     }
 
     @Transactional(readOnly = true)
