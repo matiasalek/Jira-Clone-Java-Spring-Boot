@@ -12,12 +12,14 @@ import com.matiasalek.jiraclone.repository.TicketRepository;
 import com.matiasalek.jiraclone.repository.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.annotation.Validated;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -33,7 +35,9 @@ public class TicketService {
 
     @Transactional(readOnly = true)
     public List<Ticket> getAllTickets() {
-        return ticketRepository.findAll();
+        return ticketRepository.findAll().stream()
+                .map(ticket -> new CreateTicketResponse(ticket.getId(), ticket.getTitle(), ticket.getDescription(), ticket.getStatus(), ticket.getPriority(), ticket.getReporter(), ticket.getAssignee(), ticket.getCreatedAt(), ticket.getUpdatedAt()))
+                .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
@@ -42,6 +46,7 @@ public class TicketService {
                 .orElseThrow(()-> new EntityNotFoundException("Ticket not found"+ id));
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public CreateTicketResponse createTicket(@Valid CreateTicketRequest request) {
         Role role = userRepository.findRoleByUserId(request.getReporterId());
@@ -70,8 +75,16 @@ public class TicketService {
         return new CreateTicketResponse(savedTicket);
     }
 
+
+
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public UpdateTicketResponse updateTicket(Long id, @Valid UpdateTicketRequest updateTicketRequest) {
+        Role role = userRepository.findRoleByUserId(id);
+        if (role != Role.ADMIN) {
+            throw new UnauthorizedException("Only ADMINs can update tickets.");
+        }
+
         Ticket existingTicket = ticketRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Ticket not found"+ id));
 
@@ -84,5 +97,14 @@ public class TicketService {
 
         Ticket updatedTicket = ticketRepository.save(existingTicket);
         return new UpdateTicketResponse(updatedTicket);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
+    public void deleteTicket(Long id) {
+        Ticket existingTicket = ticketRepository.findById(id)
+                .orElseThrow(()-> new EntityNotFoundException("Ticket not found"+ id));
+
+        ticketRepository.delete(existingTicket);
     }
 }

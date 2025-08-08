@@ -8,7 +8,6 @@ import com.matiasalek.jiraclone.dto.response.AssignTicketResponse;
 import com.matiasalek.jiraclone.dto.response.CreateUserResponse;
 import com.matiasalek.jiraclone.dto.response.UpdateUserResponse;
 import com.matiasalek.jiraclone.dto.response.UserSummary;
-import com.matiasalek.jiraclone.entity.User;
 import com.matiasalek.jiraclone.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -32,8 +31,8 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<User> getUserById(@PathVariable Long id) {
-        User user = userService.getUserById(id);
+    public ResponseEntity<UserSummary> getUserById(@PathVariable Long id) {
+        UserSummary user = userService.getUserById(id);
         return ResponseEntity.ok(user);
     }
 
