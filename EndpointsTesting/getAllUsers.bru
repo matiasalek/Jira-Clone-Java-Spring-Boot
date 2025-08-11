@@ -7,7 +7,11 @@ meta {
 get {
   url: http://localhost:8080/api/user
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJyb2xlIjoiREVWRUxPUEVSIiwidXNlcklkIjoxMCwic3ViIjoibWF0aWFzV2l0aFNlY3VyaXR5IiwiaWF0IjoxNzU0OTQ4MzkzLCJleHAiOjE3NTUwMzQ3OTN9.ktwzL-xNOg5rNHid4GLRhxmI1B5phGtPSf3xdsyVG5Acw3yFxW6wZSd64LkpU16ZVwoxwnRAWVvU2fvmFkLpUg
 }
 
 settings {
