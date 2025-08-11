@@ -3,6 +3,7 @@ package com.matiasalek.jiraclone.controller;
 import com.matiasalek.jiraclone.dto.request.CreateTicketRequest;
 import com.matiasalek.jiraclone.dto.request.UpdateTicketRequest;
 import com.matiasalek.jiraclone.dto.response.CreateTicketResponse;
+import com.matiasalek.jiraclone.dto.response.TicketSummary;
 import com.matiasalek.jiraclone.dto.response.UpdateTicketResponse;
 import com.matiasalek.jiraclone.entity.Ticket;
 import com.matiasalek.jiraclone.service.TicketService;
@@ -22,7 +23,7 @@ public class TicketController {
     }
 
     @GetMapping
-    public List<Ticket> getAllTickets() {
+    public List<TicketSummary> getAllTickets() {
         return ticketService.getAllTickets();
     }
 

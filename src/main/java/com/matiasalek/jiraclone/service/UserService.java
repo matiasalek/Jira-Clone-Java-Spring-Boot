@@ -44,7 +44,7 @@ public class UserService {
     @Transactional(readOnly = true)
     public List<UserSummary> getAllUsers() {
         return userRepository.findAll().stream()
-                .map(user -> new UserSummary(user.getId(), user.getUsername(), user.getEmail(), user.getRole()))
+                .map(UserSummary::new)
                 .collect(Collectors.toList());
 
     }

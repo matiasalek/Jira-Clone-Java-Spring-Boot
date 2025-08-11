@@ -3,7 +3,9 @@ package com.matiasalek.jiraclone.service;
 import com.matiasalek.jiraclone.dto.request.CreateTicketRequest;
 import com.matiasalek.jiraclone.dto.request.UpdateTicketRequest;
 import com.matiasalek.jiraclone.dto.response.CreateTicketResponse;
+import com.matiasalek.jiraclone.dto.response.TicketSummary;
 import com.matiasalek.jiraclone.dto.response.UpdateTicketResponse;
+import com.matiasalek.jiraclone.dto.response.UserSummary;
 import com.matiasalek.jiraclone.entity.Ticket;
 import com.matiasalek.jiraclone.entity.User;
 import com.matiasalek.jiraclone.enums.Role;
@@ -34,9 +36,9 @@ public class TicketService {
     }
 
     @Transactional(readOnly = true)
-    public List<Ticket> getAllTickets() {
+    public List<TicketSummary> getAllTickets() {
         return ticketRepository.findAll().stream()
-                .map(ticket -> new CreateTicketResponse(ticket.getId(), ticket.getTitle(), ticket.getDescription(), ticket.getStatus(), ticket.getPriority(), ticket.getReporter(), ticket.getAssignee(), ticket.getCreatedAt(), ticket.getUpdatedAt()))
+                .map(ticket -> new TicketSummary(ticket, new UserSummary(ticket.getReporter()), new UserSummary(ticket.getAssignee())))
                 .collect(Collectors.toList());
     }
 
