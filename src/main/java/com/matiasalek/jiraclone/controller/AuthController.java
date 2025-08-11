@@ -36,7 +36,7 @@ public class AuthController {
     private UserService userService;
 
     @Autowired
-    private CustomUserDetailsService customUserDetailsService;
+    private CustomUserDetailsService userDetailsService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -44,24 +44,17 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         try {
-            // Authenticate the user
-            Authentication authentication = authenticationManager.authenticate(
+            authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
                             request.getUsername(),
                             request.getPassword()
                     )
             );
 
-            // Load user details
             UserDetails userDetails = userDetailsService.loadUserByUsername(request.getUsername());
-
-            // Generate JWT token
             String token = jwtUtil.generateToken(userDetails);
-
-            // Cast to get additional user info
             User user = (User) userDetails;
 
-            // Return JWT response
             JwtResponse jwtResponse = new JwtResponse(
                     token,
                     user.getUsername(),
@@ -80,15 +73,13 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
-            // Create a CreateUserRequest with DEVELOPER role
             CreateUserRequest createRequest = new CreateUserRequest();
             createRequest.setUsername(request.getUsername());
             createRequest.setEmail(request.getEmail());
             createRequest.setPassword(request.getPassword());
-            createRequest.setRole(Role.DEVELOPER); // Force DEVELOPER role
+            createRequest.setRole(Role.DEVELOPER);
 
-            // Use your existing createUser method
-            CreateUserResponse response = userService.createUser(createRequest);
+            userService.createUser(createRequest);
 
             return ResponseEntity.ok(new MessageResponse("User registered successfully"));
 
