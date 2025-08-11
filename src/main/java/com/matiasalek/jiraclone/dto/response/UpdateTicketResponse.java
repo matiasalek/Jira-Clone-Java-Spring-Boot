@@ -1,7 +1,6 @@
 package com.matiasalek.jiraclone.dto.response;
 
 import com.matiasalek.jiraclone.entity.Ticket;
-import com.matiasalek.jiraclone.entity.User;
 import com.matiasalek.jiraclone.enums.Priority;
 import com.matiasalek.jiraclone.enums.Status;
 import lombok.Data;

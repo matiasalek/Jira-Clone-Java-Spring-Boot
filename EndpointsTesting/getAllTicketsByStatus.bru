@@ -1,11 +1,11 @@
 meta {
-  name: getAllUsers
+  name: getAllTicketsByStatus
   type: http
-  seq: 2
+  seq: 11
 }
 
 get {
-  url: http://localhost:8080/api/user
+  url: http://localhost:8080/api/ticket/status/done
   body: none
   auth: inherit
 }

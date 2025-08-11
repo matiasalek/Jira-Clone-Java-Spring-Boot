@@ -5,7 +5,7 @@ import com.matiasalek.jiraclone.dto.request.UpdateTicketRequest;
 import com.matiasalek.jiraclone.dto.response.CreateTicketResponse;
 import com.matiasalek.jiraclone.dto.response.TicketSummary;
 import com.matiasalek.jiraclone.dto.response.UpdateTicketResponse;
-import com.matiasalek.jiraclone.entity.Ticket;
+import com.matiasalek.jiraclone.enums.Status;
 import com.matiasalek.jiraclone.service.TicketService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
@@ -28,9 +28,15 @@ public class TicketController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Ticket> getTicketById(@PathVariable Long id) {
-        Ticket ticket = ticketService.getTicketById(id);
+    public ResponseEntity<TicketSummary> getTicketById(@PathVariable Long id) {
+        TicketSummary ticket = ticketService.getTicketById(id);
         return ResponseEntity.ok(ticket);
+    }
+
+    @GetMapping("/status/{status}")
+    public List<TicketSummary> getTicketsByStatus(@PathVariable String status) {
+        Status statusEnum = Status.valueOf(status.toUpperCase());
+        return ticketService.getAllTicketsByStatus(statusEnum);
     }
 
     @PostMapping

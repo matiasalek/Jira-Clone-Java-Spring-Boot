@@ -9,6 +9,7 @@ import com.matiasalek.jiraclone.dto.response.UserSummary;
 import com.matiasalek.jiraclone.entity.Ticket;
 import com.matiasalek.jiraclone.entity.User;
 import com.matiasalek.jiraclone.enums.Role;
+import com.matiasalek.jiraclone.enums.Status;
 import com.matiasalek.jiraclone.exception.UnauthorizedException;
 import com.matiasalek.jiraclone.repository.TicketRepository;
 import com.matiasalek.jiraclone.repository.UserRepository;
@@ -43,9 +44,26 @@ public class TicketService {
     }
 
     @Transactional(readOnly = true)
-    public Ticket getTicketById(Long id) {
-        return ticketRepository.findById(id)
-                .orElseThrow(()-> new EntityNotFoundException("Ticket not found"+ id));
+    public TicketSummary getTicketById(Long id) {
+        Ticket ticket = ticketRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Ticket not found"+id));
+
+        return new TicketSummary(
+               ticket,
+                new UserSummary(ticket.getReporter()),
+                new UserSummary(ticket.getAssignee())
+        );
+    }
+
+    @Transactional(readOnly = true)
+    public List<TicketSummary> getAllTicketsByStatus(Status status) {
+        return ticketRepository.findByStatus(status).stream()
+                .map(ticket -> new TicketSummary(
+                        ticket,
+                        new UserSummary(ticket.getReporter()),
+                        new UserSummary(ticket.getAssignee())
+                ))
+                .collect(Collectors.toList());
     }
 
     @PreAuthorize("hasRole('ADMIN')")
