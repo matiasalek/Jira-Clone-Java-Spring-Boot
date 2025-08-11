@@ -147,11 +147,11 @@ public class UserService {
         User existingUserById = userRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException(id.toString()));
 
-        for (Ticket t : existingUserById.getAssigneedTickets()) {
+        for (Ticket t : existingUserById.getAssignedTickets()) {
             t.setAssignee(null);
         }
 
-        ticketRepository.saveAll(existingUserById.getAssigneedTickets());
+        ticketRepository.saveAll(existingUserById.getAssignedTickets());
         userRepository.deleteById(id);
     }
 }
