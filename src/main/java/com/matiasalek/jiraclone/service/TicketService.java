@@ -8,6 +8,7 @@ import com.matiasalek.jiraclone.dto.response.UpdateTicketResponse;
 import com.matiasalek.jiraclone.dto.response.UserSummary;
 import com.matiasalek.jiraclone.entity.Ticket;
 import com.matiasalek.jiraclone.entity.User;
+import com.matiasalek.jiraclone.enums.Priority;
 import com.matiasalek.jiraclone.enums.Role;
 import com.matiasalek.jiraclone.enums.Status;
 import com.matiasalek.jiraclone.exception.UnauthorizedException;
@@ -58,6 +59,17 @@ public class TicketService {
     @Transactional(readOnly = true)
     public List<TicketSummary> getAllTicketsByStatus(Status status) {
         return ticketRepository.findByStatus(status).stream()
+                .map(ticket -> new TicketSummary(
+                        ticket,
+                        new UserSummary(ticket.getReporter()),
+                        new UserSummary(ticket.getAssignee())
+                ))
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<TicketSummary> getAllTicketsByPriority(Priority priority) {
+        return ticketRepository.findByPriority(priority).stream()
                 .map(ticket -> new TicketSummary(
                         ticket,
                         new UserSummary(ticket.getReporter()),

@@ -5,6 +5,7 @@ import com.matiasalek.jiraclone.dto.request.UpdateTicketRequest;
 import com.matiasalek.jiraclone.dto.response.CreateTicketResponse;
 import com.matiasalek.jiraclone.dto.response.TicketSummary;
 import com.matiasalek.jiraclone.dto.response.UpdateTicketResponse;
+import com.matiasalek.jiraclone.enums.Priority;
 import com.matiasalek.jiraclone.enums.Status;
 import com.matiasalek.jiraclone.service.TicketService;
 import jakarta.validation.Valid;
@@ -37,6 +38,12 @@ public class TicketController {
     public List<TicketSummary> getTicketsByStatus(@PathVariable String status) {
         Status statusEnum = Status.valueOf(status.toUpperCase());
         return ticketService.getAllTicketsByStatus(statusEnum);
+    }
+
+    @GetMapping("/priority/{priority}")
+    public List<TicketSummary> getTicketsByPriority(@PathVariable String priority) {
+        Priority priorityEnum = Priority.valueOf(priority.toUpperCase());
+        return ticketService.getAllTicketsByPriority(priorityEnum);
     }
 
     @PostMapping
