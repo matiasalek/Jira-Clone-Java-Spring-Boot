@@ -2,6 +2,7 @@ package com.matiasalek.jiraclone.config;
 
 import com.matiasalek.jiraclone.security.JwtAuthenticationEntryPoint;
 import com.matiasalek.jiraclone.security.JwtRequestFilter;
+import com.matiasalek.jiraclone.security.JwtUtil;
 import com.matiasalek.jiraclone.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -23,9 +24,13 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig {
+    private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService userDetailsService;
 
-    @Autowired
-    private CustomUserDetailsService userDetailsService;
+    public SecurityConfig(JwtUtil jwtUtil, CustomUserDetailsService userDetailsService) {
+        this.jwtUtil = jwtUtil;
+        this.userDetailsService = userDetailsService;
+    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -45,7 +50,10 @@ public class SecurityConfig {
 
     @Bean
     public JwtRequestFilter jwtRequestFilter() {
-        return new JwtRequestFilter();
+        return new JwtRequestFilter(
+                userDetailsService,
+                jwtUtil
+                );
     }
 
     @Bean
