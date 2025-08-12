@@ -25,7 +25,6 @@ public class JwtUtil {
     public String generateToken(UserDetails userDetails) {
         Map<String, Object> claims = new HashMap<>();
 
-        // Cast to your User entity to get additional info
         User user = (User) userDetails;
         claims.put("userId", user.getId());
         claims.put("role", user.getRole().name());
