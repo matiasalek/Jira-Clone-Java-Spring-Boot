@@ -63,12 +63,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authz -> authz
                         // Public endpoints
                         .requestMatchers("/api/auth/**").permitAll()
-                        .requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/api/auth/register").permitAll()
+                        .requestMatchers("/v3/api-docs/**", "/swagger-ui", "/swagger-ui.html").permitAll()
 
                         // Admin-only endpoints
                         .requestMatchers(HttpMethod.DELETE, "/api/user/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT, "/api/user/**").hasRole("ADMIN") // for role updates
+                        .requestMatchers(HttpMethod.PUT, "/api/user/**").hasRole("ADMIN")
 
                         // All other endpoints require authentication
                         .anyRequest().authenticated()

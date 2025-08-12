@@ -10,6 +10,11 @@ import com.matiasalek.jiraclone.enums.Role;
 import com.matiasalek.jiraclone.security.JwtUtil;
 import com.matiasalek.jiraclone.service.CustomUserDetailsService;
 import com.matiasalek.jiraclone.service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -39,6 +44,14 @@ public class AuthController {
     }
 
     @PostMapping("/login")
+    @Operation(summary = "User login", description = "Authenticate user and return JWT token")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Login successful",
+            content = @Content(schema = @Schema(implementation = JwtResponse.class))),
+
+            @ApiResponse(responseCode = "401", description = "Invalid credentials",
+            content = @Content(schema = @Schema(implementation = MessageResponse.class))),
+    })
     public ResponseEntity<?> login(@Valid @RequestBody LoginRequest request) {
         try {
             authenticationManager.authenticate(
@@ -68,6 +81,7 @@ public class AuthController {
     }
 
     @PostMapping("/register")
+    @Operation(summary = "User registration", description = "Register new user as DEVELOPER")
     public ResponseEntity<?> register(@Valid @RequestBody RegisterRequest request) {
         try {
             CreateUserRequest createRequest = new CreateUserRequest();
