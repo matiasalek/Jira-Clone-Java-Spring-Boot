@@ -4,7 +4,6 @@ import com.matiasalek.jiraclone.security.JwtAuthenticationEntryPoint;
 import com.matiasalek.jiraclone.security.JwtRequestFilter;
 import com.matiasalek.jiraclone.security.JwtUtil;
 import com.matiasalek.jiraclone.service.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
